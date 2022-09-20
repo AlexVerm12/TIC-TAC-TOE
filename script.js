@@ -1,34 +1,39 @@
 let fields = [];
 let gameOver = false;
 let currentShape = "cross";
+let counter = 0; //Zählt wie oft etwas in das array kommt.
 
-function fillShape(id) { // Die Variable Id bekommt den Wert vom angeklickten Feld (0-8)
+function fillShape(id) { // Die Variable Id bekommt den Wert vom angeklickten Feld (0-8). durch das rufzeichen wird die if abfrage umgedreht. D.H: statt wenn etwas drinnen steht wird die function ausgeführt heißt es jetzt die function wird ausgeführt wenn an dieser Stelle noch nichts drinnen steht.
+
   if (!fields[id] && !gameOver) { // gameOver ist standartmässig auf false gesetzt. durch das ! wird es auf true umgewandelt und die function wird ausgeführt. Sobald jemand gewonnen hat wird gameOver auf true gesetzt. Dann wird durch das ! gameOver auf false umgewandelt und die Function wird nicht mehr ausgeführt.
-    // durch das rufzeichen wird die if abfrage umgedreht. D.H: statt wenn etwas drinnen steht wird die function ausgeführt heißt es jetzt die function wird ausgeführt wenn an dieser Stelle noch nichts drinnen steht.
     if (currentShape == "cross") { // Wenn die Variable gerade den Wert 'Cross' hat, dann wird der Wert zu Circle umgewandelt.
       currentShape = "circle";
       document.getElementById("player-1").classList.add("player-inactive"); // Wenn Circle an der Reihe ist, wird Cross inactive
       document.getElementById("player-2").classList.remove("player-inactive");
+      counter ++;
     } else {
       currentShape = "cross";
       document.getElementById("player-1").classList.remove("player-inactive"); // Wenn Cross an der Reihe ist, wird circle inaktiv
       document.getElementById("player-2").classList.add("player-inactive");
+      counter ++;
     }
 
     fields[id] = currentShape; // Hier wird abwechselnd der Wert Cross und Circle in das array eingefügt.
-
+    
     draw();
     checkForWin();
   }
 }
 
+
 function restart(){
     gameOver = false;
     fields = [];
+    counter = 0;
     document.getElementById('game-over').classList.add('d-none');
     document.getElementById('restart-btn').classList.add('d-none');
 for(i = 1; i < 9; i++ ){
-    document.getElementById('line-' + i).classList.add('d-none');
+    document.getElementById('line-' + i).style.transform = 'scalex(0)';
 }
 for(i = 0; i < 9; i++ ){
     document.getElementById('circle-' + i).classList.add('d-none');
@@ -85,7 +90,7 @@ function checkForWin() { // Hier werden alle Siegmöglichkeiten erörtert.
     winner = fields[2];
     document.getElementById('line-8').style.transform = 'rotate(135deg) scalex(1)';
   }
-  if (winner) {
+  if (winner || counter == 9 && !winner) {
     gameOver = true; // gameOver wird auf true gesetzt wenn jemand gewonnen hat.
     setTimeout(function() {
     document.getElementById('game-over').classList.remove('d-none');
